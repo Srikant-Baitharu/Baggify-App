@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
     password: String,
     cart: {
         type: Array,
-        default: []
+        default: [],
     },
     isadmin: Boolean,
     orders: {
