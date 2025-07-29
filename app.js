@@ -17,6 +17,7 @@ require('dotenv').config();
 
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const setLoggedin = require('./middlewares/setLoggedin.js');
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -40,13 +41,15 @@ const startServer = async () => {
       })
     )
     app.use(flash());
+    app.use(setLoggedin);
     // Routes
     app.use('/owners',ownerRoutes);
     app.use('/users',userRoutes);
     app.use('/products',productsRoutes);
+    app.use('/owners',productsRoutes)
     app.get('/', (req, res) => {
       const [error] = req.flash('error');
-      res.render('index', { error });
+      res.render('index', { error, isLoggedIn: false });
     });
 
     app.use('/',indexRouter);
