@@ -8,4 +8,4 @@ const generateToken = (user) => {
   );
 };
 
-module.exports = { generateToken }; // ✅ proper named export
+module.exports = { generateToken }; 
