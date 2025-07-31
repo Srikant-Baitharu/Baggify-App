@@ -76,6 +76,13 @@
                 alert("✅ Payment Success! Payment ID: " + response.razorpay_payment_id);
                 window.location.href = "/payment-success";
             },
+
+            modal: {
+                ondismiss: function () {
+                // When user closes Razorpay modal (without paying)
+                window.location.href = "/payment-failure";  // 🔁 Redirect to failure page
+            }
+        },
             "theme": {
                 "color": "#3399cc"
             }

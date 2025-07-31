@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const razorpay = require("../config/razorpay");
-const {payment,paymentSuccess} = require("../controllers/paymentController");
+const {payment,paymentSuccess,paymentFailure} = require("../controllers/paymentController");
 const Razorpay = require("razorpay")
 
 router.post("/process",payment);
@@ -30,6 +30,8 @@ router.post("/create-order", async (req, res) => {
 });
 
 router.get("/payment-success", paymentSuccess);
+
+router.get("/payment-failure", paymentFailure);
 
 
 module.exports = router;

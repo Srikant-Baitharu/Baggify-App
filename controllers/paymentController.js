@@ -33,8 +33,12 @@ const paymentSuccess = (req, res) => {
   res.render("payment-success"); // Make sure payment-success.ejs exists
 };
 
+const paymentFailure = (req,res) => {
+  res.render("payment-failure"); // Make sure payment-failure.ejs exists
+}
 
 module.exports = {
   payment,
   paymentSuccess,
+  paymentFailure,
 }
