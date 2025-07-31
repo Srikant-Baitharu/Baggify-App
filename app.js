@@ -12,6 +12,7 @@ const flash = require("connect-flash");
 const expressSession = require("express-session");
 const Product = require('./models/productModel.js');
 const indexRouter = require("./routes/index.js");
+const userModel = require('./models/userModel.js')
 require('dotenv').config();
 
 
@@ -53,6 +54,38 @@ const startServer = async () => {
     });
 
     app.use('/',indexRouter);
+
+    app.post("/remove-from-cart/:id", isLoggedIn, async (req, res) => {
+      let user = await userModel.findOne({ email: req.user.email });
+      user.cart = user.cart.filter(item => item && item._id && item._id.toString() !== req.params.id);
+      await user.save();
+      res.redirect("/cart");
+    });
+
+    app.post("/update-quantity/:id", isLoggedIn, async (req, res) => {
+      const user = await userModel.findOne({ email: req.user.email });
+      const itemId = req.params.id;
+      const action = req.query.action;
+  
+      user.cart.forEach(item => {
+          if (item && item._id.toString() === itemId) {
+              if (!item.quantity) item.quantity = 1;
+              if (action === "increase") item.quantity += 1;
+              if (action === "decrease" && item.quantity > 1) item.quantity -= 1;
+          }
+      });
+
+  
+      await user.save();
+      res.redirect("/cart");
+    });
+
+    app.post("/checkout", isLoggedIn, (req, res) => {
+      res.send("🛍️ Checkout process will go here!");
+    });
+  
+  
+  
     //PORT
     const PORT = process.env.PORT || 8080
 

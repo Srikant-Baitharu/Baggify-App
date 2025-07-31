@@ -17,13 +17,31 @@ router.get('/shop', isLoggedIn, async (req, res) => {
       }
 });
 
-router.get("/cart",isLoggedIn,async (req,res)=>{
-  let user = await userModel.findOne({ email: req.user.email }).populate("cart");
+router.get("/cart", isLoggedIn, async (req, res) => {
+  try {
+    let user = await userModel.findOne({ email: req.user.email }).populate("cart");
 
-  const bill = (Number(user.cart[0].price)+20)-Number(user.cart[0].discount)
-  
-  res.render("cart", { user, bill });
-})
+    let bill = 0;
+
+    // Handle empty cart
+    if (!user.cart || user.cart.length === 0) {
+      return res.render("cart", { user, bill });
+    }
+
+    // Calculate total bill
+    user.cart.forEach(item => {
+      const quantity = item.quantity || 1;
+      const itemTotal = (Number(item.price || 0) * quantity) + 20 - Number(item.discount || 0);
+      bill += itemTotal;
+    });
+
+    res.render("cart", { user, bill });
+  } catch (err) {
+    console.error("Error loading cart:", err);
+    res.status(500).send("Error loading cart");
+  }
+});
+
 
 router.get('/addtocart/:productid',isLoggedIn,async (req,res)=>{
     let user = await userModel.findOne({email: req.user.email});
