@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const app = express();
 const colors = require('colors');
@@ -7,13 +9,16 @@ const connectDb = require('./config/db.js');
 const ownerRoutes = require("./routes/ownerRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const productsRoutes = require("./routes/productsRoutes.js");
+const paymentRoutes = require('./routes/paymentRoutes.js')
 const { isLoggedIn } = require('./middlewares/isLoggedIn');
 const flash = require("connect-flash");
 const expressSession = require("express-session");
 const Product = require('./models/productModel.js');
 const indexRouter = require("./routes/index.js");
 const userModel = require('./models/userModel.js')
-require('dotenv').config();
+const Razorpay = require("razorpay");
+
+
 
 
 const cookieParser = require("cookie-parser");
@@ -54,6 +59,65 @@ const startServer = async () => {
     });
 
     app.use('/',indexRouter);
+    app.use('/',isLoggedIn,paymentRoutes);
+
+    app.get("/checkout", isLoggedIn, async (req, res) => {
+      const user = await userModel.findOne({ email: req.user.email }).populate("cart");
+      let subtotal = 0;
+      user.cart.forEach(item => {
+          subtotal += item.price;
+      });
+
+      const platformFee = 20;
+      const bill = subtotal +platformFee;
+
+      res.render("checkout", {
+        subtotal,
+        platformFee,
+        bill,
+        razorpayKey: process.env.RAZORPAY_ID_KEY
+      });
+  });
+
+
+app.post("/checkout", isLoggedIn, async (req, res) => {
+  try {
+    const user = await userModel.findOne({ email: req.user.email }).populate("cart");
+    let subtotal = 0;
+    user.cart.forEach(item => {
+      subtotal += item.price;
+    });
+
+    const platformFee = 20;
+    const bill = subtotal+platformFee;
+
+    const instance = new Razorpay({
+      key_id: process.env.RAZORPAY_ID_KEY,
+      key_secret: process.env.RAZORPAY_SECRET_KEY
+    });
+
+    const options = {
+      amount: bill * 100, // Amount in paise
+      currency: "INR",
+      receipt: `receipt_order_${Date.now()}`
+    };
+
+    const order = await instance.orders.create(options);
+
+    res.render("checkout",{
+      subtotal,
+      platformFee,
+      bill,
+      orderId: order.id,
+      razorpayKey: process.env.RAZORPAY_ID_KEY,
+    });
+  } catch (error) {
+    console.error("Error creating order:", error);
+    res.status(500).send("Something went wrong while processing payment.");
+  }
+});
+
+  
 
     app.post("/remove-from-cart/:id", isLoggedIn, async (req, res) => {
       let user = await userModel.findOne({ email: req.user.email });
@@ -66,7 +130,7 @@ const startServer = async () => {
       const user = await userModel.findOne({ email: req.user.email });
       const itemId = req.params.id;
       const action = req.query.action;
-  
+    
       user.cart.forEach(item => {
           if (item && item._id.toString() === itemId) {
               if (!item.quantity) item.quantity = 1;
@@ -74,16 +138,11 @@ const startServer = async () => {
               if (action === "decrease" && item.quantity > 1) item.quantity -= 1;
           }
       });
-
   
       await user.save();
       res.redirect("/cart");
     });
 
-    app.post("/checkout", isLoggedIn, (req, res) => {
-      res.send("🛍️ Checkout process will go here!");
-    });
-  
   
   
     //PORT
