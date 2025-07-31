@@ -74,6 +74,7 @@
             "order_id": data.orderId,
             "handler": function (response) {
                 alert("✅ Payment Success! Payment ID: " + response.razorpay_payment_id);
+                window.location.href = "/payment-success";
             },
             "theme": {
                 "color": "#3399cc"

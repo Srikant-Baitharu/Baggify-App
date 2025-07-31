@@ -29,4 +29,12 @@ const payment = async (req, res) => {
   }
 };
 
-module.exports = payment;
+const paymentSuccess = (req, res) => {
+  res.render("payment-success"); // Make sure payment-success.ejs exists
+};
+
+
+module.exports = {
+  payment,
+  paymentSuccess,
+}
