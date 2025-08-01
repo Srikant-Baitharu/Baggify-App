@@ -157,6 +157,19 @@ app.post("/checkout", isLoggedIn, async (req, res) => {
       }
     });
 
+  // Render edit profile form
+  app.get("/edit-profile", isLoggedIn, async (req, res) => {
+    const user = await userModel.findById(req.user._id);
+    res.render("editProfile", { user });
+  });
+
+  // Handle form submission
+  app.post("/edit-profile", isLoggedIn, async (req, res) => {
+    const { fullname, email } = req.body;
+    await userModel.findByIdAndUpdate(req.user._id, { fullname, email });
+    res.redirect("/myaccount");
+  });
+
     
     
     

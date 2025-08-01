@@ -13,8 +13,13 @@ const isLoggedIn = async (req, res, next) => {
             .findOne({ email: decoded.email })
             .select("-password");
 
-        req.user = user;
+         if(!user){
+            req.flash("Error","You need to login first");
+            return res.redirect('/');
+         }   
 
+        
+        req.user = user;
         next();
     } catch (err) {
         req.flash("error","Something Went Wrong.");
