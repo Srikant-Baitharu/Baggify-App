@@ -61,6 +61,10 @@ const startServer = async () => {
     app.use('/',indexRouter);
     app.use('/',isLoggedIn,paymentRoutes);
 
+    app.use(express.static('public')); // to serve /uploads images
+    app.use('/', require('./routes/account')); // or whatever your route path is
+
+
     app.get("/checkout", isLoggedIn, async (req, res) => {
       const user = await userModel.findOne({ email: req.user.email }).populate("cart");
       let subtotal = 0;
@@ -142,6 +146,20 @@ app.post("/checkout", isLoggedIn, async (req, res) => {
       await user.save();
       res.redirect("/cart");
     });
+
+    app.get('/myaccount', isLoggedIn, async (req, res) => {
+      try {
+        const user = await userModel.findById(req.user._id);
+        res.render('myaccount', { user });
+      } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+      }
+    });
+
+    
+    
+    
 
   
   

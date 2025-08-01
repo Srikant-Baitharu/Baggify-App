@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Account | Bag App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-white w-full max-w-2xl rounded-2xl shadow-xl p-8 space-y-8">
+    <h1 class="text-3xl font-bold text-center text-gray-800">👤 My Account</h1>
+
+    <!-- Profile Image & Upload -->
+    <div class="flex flex-col items-center space-y-4">
+        <% if (user.picture) { %>
+            <img src="/uploads/<%= user.picture || '/default-profile.png' %>" alt="Profile Image" 
+              class="w-32 h-32 rounded-full border-4 border-gray-300 object-cover shadow" >
+          <% } else { %>
+            <p>No profile image uploaded.</p>
+          <% } %>
+          
+
+      <form action="/upload-profile" method="POST" enctype="multipart/form-data" class="flex items-center gap-4">
+        <input type="file" name="profileImage" accept="image/*" class="text-sm" required>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Upload
+        </button>
+      </form>
+    </div>
+
+    <!-- User Info -->
+    <div class="space-y-2 text-center">
+      <p class="text-lg"><strong>Name:</strong> <%= user.fullname %></p>
+      <p class="text-lg"><strong>Email:</strong> <%= user.email %></p>
+      <% if (user.phone) { %>
+        <p class="text-lg"><strong>Phone:</strong> <%= user.phone %></p>
+      <% } %>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-between items-center pt-6 border-t border-gray-200">
+      <a href="/shop" class="text-blue-500 hover:underline">← Back to Home</a>
+
+      <div class="space-x-3">
+        <a href="/edit-profile" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Edit Profile</a>
+        <a href="/logout" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</a>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
