@@ -31,9 +31,8 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
 
 ## 📸 Screenshots
 
-| Home Page | Cart | Checkout |
-|-----------|------|----------|
-| ![home](./screenshots/home.png) | ![cart](./screenshots/cart.png) | ![checkout](./screenshots/checkout.png) |
+| ![account](./screenshots/account.png) | ![cart](./screenshots/cart.png) | ![checkout](./screenshots/checkout%20page(razorpay).png) |
+| ![shop](./screenshots/Shop.png)       | ![Login and Register](./screenshots/Login%20and%20Create.png)
 
 ---
 
@@ -71,3 +70,13 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
 
 4. **Start the server**
     npm start or npx nodemon app.js
+
+## Deployment
+## Live Demo
+[Click here to view the app](https://your-deployed-site.com)
+
+
+## Credits
+- [Razorpay Documentation](https://razorpay.com/docs/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
