@@ -1,97 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Checkout</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Bag App</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-    <!-- ✅ Include Header Here -->
-    <%- include('./partials/header') %>
+  <!-- Header -->
+  <%- include('./partials/header') %>
 
-    <!-- ✅ Centered Section -->
-    <div class="flex-grow flex justify-center items-center">
-        <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
-            <h1 class="text-2xl font-semibold mb-6 text-center">Proceed to Payment</h1>
-            
-            
-            <div class="bg-gray-50 p-4 rounded mb-4">
-                <div class="flex justify-between mb-2">
-                    <span>Subtotal</span>
-                    <span>₹ <%= subtotal %></span>
-                </div>
-                <div class="flex justify-between mb-2">
-                    <span>Platform Fee</span>
-                    <span>₹ <%= platformFee %></span>
-                </div>
-                <hr class="my-2">
-                <div class="flex justify-between font-bold text-lg">
-                    <span>Total Amount</span>
-                    <span>₹ <%= bill %></span>
-                </div>
-            </div>
-            
+  <!-- Main Section -->
+  <main class="flex-grow flex items-center justify-center px-4">
+    <div class="bg-white w-full max-w-md rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
+      <h1 class="text-2xl font-bold text-center text-gray-800">🧾 Proceed to Payment</h1>
 
-            <form id="checkout-form">
-                <input type="hidden" id="total-amount" value="<%= bill %>">
-                <button type="submit" class="w-full bg-green-600 text-white px-6 py-3 rounded shadow hover:bg-green-700 transition duration-300">
-                    Pay Now
-                </button>
-            </form>
+      <!-- Billing Details -->
+      <div class="bg-gray-50 p-4 rounded-md space-y-2">
+        <div class="flex justify-between">
+          <span class="text-gray-700">Subtotal</span>
+          <span>₹ <%= subtotal %></span>
         </div>
+        <div class="flex justify-between">
+          <span class="text-gray-700">Platform Fee</span>
+          <span>₹ <%= platformFee %></span>
+        </div>
+        <hr />
+        <div class="flex justify-between font-semibold text-lg">
+          <span>Total Amount</span>
+          <span>₹ <%= bill %></span>
+        </div>
+      </div>
+
+      <!-- Payment Button -->
+      <form id="checkout-form" class="space-y-4">
+        <input type="hidden" id="total-amount" value="<%= bill %>" />
+        <button
+          type="submit"
+          class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition"
+        >
+          💳 Pay Now
+        </button>
+      </form>
     </div>
+  </main>
 
-    <!-- ✅ Include Footer Here -->
-    <%- include('./partials/footer') %>
+  <!-- Footer -->
+  <%- include('./partials/footer') %>
 
-    <!-- Razorpay Script -->
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById("checkout-form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const amount = document.getElementById("total-amount").value;
 
-    <script>
-    document.getElementById("checkout-form").addEventListener("submit", async function(e) {
-        e.preventDefault();
+      const response = await fetch("/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
 
-        const amount = document.getElementById("total-amount").value;
+      const data = await response.json();
 
-        const response = await fetch("/create-order", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ amount })
-        });
-
-        const data = await response.json();
-        console.log("Order ID from backend:", data.orderId);
-
-        const options = {
-            "key": "<%= razorpayKey %>",
-            "amount": parseInt(amount) * 100,
-            "currency": "INR",
-            "name": "My Shop",
-            "description": "Test Transaction",
-            "order_id": data.orderId,
-            "handler": function (response) {
-                alert("✅ Payment Success! Payment ID: " + response.razorpay_payment_id);
-                window.location.href = "/payment-success";
-            },
-
-            modal: {
-                ondismiss: function () {
-                // When user closes Razorpay modal (without paying)
-                window.location.href = "/payment-failure";  // 🔁 Redirect to failure page
-            }
+      const options = {
+        key: "<%= razorpayKey %>",
+        amount: parseInt(amount) * 100,
+        currency: "INR",
+        name: "Bag App",
+        description: "Bag Purchase",
+        order_id: data.orderId,
+        handler: function (response) {
+          alert("✅ Payment Success! ID: " + response.razorpay_payment_id);
+          window.location.href = "/payment-success";
         },
-            "theme": {
-                "color": "#3399cc"
-            }
-        };
+        modal: {
+          ondismiss: function () {
+            window.location.href = "/payment-failure";
+          }
+        },
+        theme: { color: "#22c55e" } // Tailwind green
+      };
 
-        const rzp1 = new Razorpay(options);
-        rzp1.open();
+      const rzp = new Razorpay(options);
+      rzp.open();
     });
-    </script>
+  </script>
 
 </body>
 </html>
