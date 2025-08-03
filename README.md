@@ -73,7 +73,8 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
 
 ## Deployment
 ## Live Demo
-[Click here to view the app](https://your-deployed-site.com)
+[Click here to view the app]
+(https://baggify-app.onrender.com/)
 
 
 ## Credits
