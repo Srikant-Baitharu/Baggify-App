@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: bag-app
+    runtime: node
+    repo: https://github.com/Srikant-Baitharu/Baggify-App.git
+    branch: master
+    buildCommand: npm install
+    startCommand: npx nodemon app.js
+    envVars:
+    - key: MONGO_URL
+    - key: RAZORPAY_ID_KEY
+    - key: RAZORPAY_SECRET_KEY
+    - key: EXPRESS_SESSION_SECRET
