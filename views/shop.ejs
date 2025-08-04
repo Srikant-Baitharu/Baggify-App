@@ -42,7 +42,7 @@
       <div class="rounded shadow overflow-hidden bg-white flex flex-col">
         <!-- Product Image -->
         <div class="h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-          <img src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>" class="h-[10rem] object-contain">
+          <img src="/<%= product.image %>" alt="<%= product.name %>" class="h-[10rem] object-contain">
         </div>
 
         <!-- Product Info -->
