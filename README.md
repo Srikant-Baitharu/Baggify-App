@@ -81,6 +81,24 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
    🔒 All Delete, Update, and Create buttons are disabled to protect  data integrity and for privacy reasons.
    👁️‍🗨️ This page is intended only for viewing how CRUD operations   would appear in a real admin panel.
 
+6. **For rendering the site**
+    create a file name :- render.yaml
+    services:
+    - type: web
+    name: bag-app
+    runtime: node
+    repo: https://github.com/Srikant-Baitharu/Baggify-App.git
+    branch: master
+    buildCommand: npm install
+    startCommand: npx nodemon app.js
+    envVars:
+    - key: MONGO_URL
+    - key: RAZORPAY_ID_KEY
+    - key: RAZORPAY_SECRET_KEY
+    - key: EXPRESS_SESSION_SECRET
+
+    **Then add all keyvalues as environment variables in render**
+
 ## Deployment
 ## Live Demo
 [Click here to view the app]
