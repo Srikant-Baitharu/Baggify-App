@@ -55,7 +55,7 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
 1. **Clone the repo**
    ```bash
    git clone https://github.com/Srikant-Baitharu/Baggify-App.git
-   cd baggify-app
+   cd baggify
 
 2. **Install dependencies**
     npm install
@@ -70,6 +70,16 @@ A full-stack e-commerce platform to browse, buy, and checkout premium bags onlin
 
 4. **Start the server**
     npm start or npx nodemon app.js
+
+5. **For Crud Operation**
+   For showcasing admin-side product management, visit:
+
+   /owners/admin or (https://baggify-app.onrender.com/owners/admin)
+   
+
+   ✅ This page is publicly accessible for demo purposes — no login required.
+   🔒 All Delete, Update, and Create buttons are disabled to protect  data integrity and for privacy reasons.
+   👁️‍🗨️ This page is intended only for viewing how CRUD operations   would appear in a real admin panel.
 
 ## Deployment
 ## Live Demo
